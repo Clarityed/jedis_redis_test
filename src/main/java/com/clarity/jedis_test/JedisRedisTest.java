@@ -1,4 +1,4 @@
-package com.clarity;
+package com.clarity.jedis_test;
 
 import com.clarity.utils.JedisUtil;
 import org.testng.annotations.Test;
@@ -21,12 +21,13 @@ public class JedisRedisTest {
         Jedis jedis = new Jedis("192.168.254.129", 6379);
         String value = jedis.ping();
         System.out.println(value);
+        jedis.close();
     }
 
     // 测试 key
     @Test
     public void test2() {
-        Jedis jedis = JedisUtil.getJedisRedisObj("192.168.254.129", 6379);
+        Jedis jedis = JedisUtil.getLocalRedisJedisObj();
         Set<String> keys1 = jedis.keys("*");
         for (String key : keys1) {
             System.out.println(key);
@@ -58,6 +59,7 @@ public class JedisRedisTest {
         System.out.println(jedis.select(15));
         System.out.println(jedis.select(0));
         System.out.println(jedis.dbSize());
+        jedis.close();
     }
 
 }

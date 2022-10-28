@@ -10,8 +10,8 @@ import redis.clients.jedis.Jedis;
  */
 public class JedisUtil {
 
-    public static Jedis getJedisRedisObj(String host, int port) {
-        return new Jedis(host, port);
+    public static Jedis getLocalRedisJedisObj() {
+        return new Jedis("192.168.254.129", 6379);
     }
 
 }
