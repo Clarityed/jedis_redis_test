@@ -4,6 +4,7 @@ import com.clarity.utils.JedisUtil;
 import org.testng.annotations.Test;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -59,6 +60,72 @@ public class JedisRedisTest {
         System.out.println(jedis.select(15));
         System.out.println(jedis.select(0));
         System.out.println(jedis.dbSize());
+        jedis.flushAll();
+        jedis.close();
+    }
+
+    // 测试 string
+    @Test
+    public void test3() {
+        Jedis jedis = JedisUtil.getLocalRedisJedisObj();
+        System.out.println(jedis.setnx("k1", "keQing"));
+        System.out.println(jedis.setnx("k1", "keQing1"));
+        System.out.println(jedis.get("k1"));
+        System.out.println(jedis.append("k1", "是我的"));
+        System.out.println(jedis.get("k1"));
+        System.out.println(jedis.strlen("k1"));
+        jedis.set("k2", "100");
+        System.out.println(jedis.type("k2"));
+        jedis.incr("k2");
+        System.out.println(jedis.get("k2"));
+        jedis.decr("k2");
+        System.out.println(jedis.get("k2"));
+        jedis.incrBy("k2", 100);
+        System.out.println(jedis.get("k2"));
+        jedis.decrBy("k2", 200);
+        System.out.println(jedis.get("k2"));
+        jedis.flushAll();
+        Set<String> keys1 = jedis.keys("*");
+        for (String key : keys1) {
+            System.out.println(key);
+        }
+        jedis.mset("k1", "v1", "k2", "v2", "k3", "v3");
+        Set<String> keys2 = jedis.keys("*");
+        for (String key : keys2) {
+            System.out.println(key);
+        }
+        List<String> mget = jedis.mget("k1", "k2", "k3");
+        for (String s : mget) {
+            System.out.println(s);
+        }
+        System.out.println(jedis.msetnx("k3", "v3", "k4", "v4", "k5", "v5"));
+        Set<String> keys3 = jedis.keys("*");
+        for (String key : keys3) {
+            System.out.println(key);
+        }
+        jedis.msetnx("k4", "v4", "k5", "v5", "k6", "v6");
+        Set<String> keys4 = jedis.keys("*");
+        for (String key : keys4) {
+            System.out.println(key);
+        }
+        jedis.set("role", "keQing");
+        System.out.println(jedis.get("role"));
+        System.out.println(jedis.getrange("role", 1, 2));
+        jedis.setrange("role", 5, "andniLu");
+        System.out.println(jedis.get("role"));
+        jedis.setrange("role", 1, "123");
+        System.out.println(jedis.get("role"));
+        jedis.setrange("role", 12, "123");
+        System.out.println(jedis.get("role"));
+        jedis.setex("k7", 5, "1");
+        System.out.println(jedis.ttl("k7"));
+        Set<String> keys5 = jedis.keys("*");
+        for (String key : keys5) {
+            System.out.println(key);
+        }
+        System.out.println(jedis.getSet("role", "keQing"));
+        System.out.println(jedis.get("role"));
+        jedis.flushAll();
         jedis.close();
     }
 
