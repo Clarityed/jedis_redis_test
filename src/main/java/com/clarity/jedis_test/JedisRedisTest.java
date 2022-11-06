@@ -3,6 +3,7 @@ package com.clarity.jedis_test;
 import com.clarity.utils.JedisUtil;
 import org.testng.annotations.Test;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ListPosition;
 
 import java.util.List;
 import java.util.Set;
@@ -126,6 +127,42 @@ public class JedisRedisTest {
         System.out.println(jedis.getSet("role", "keQing"));
         System.out.println(jedis.get("role"));
         jedis.flushAll();
+        jedis.close();
+    }
+
+    // 测试 List
+    @Test
+    public void test4() {
+        Jedis jedis = JedisUtil.getLocalRedisJedisObj();
+        jedis.lpush("k1", "v1", "v2", "v3");
+        List<String> k1 = jedis.lrange("k1", 0, -1);
+        k1.forEach(System.out::println);
+        jedis.rpush("k2", "v1", "v2", "v3");
+        List<String> k2 = jedis.lrange("k2", 0, -1);
+        k2.forEach(System.out::println);
+        System.out.println(jedis.lpop("k1"));
+        System.out.println(jedis.rpop("k1"));
+        System.out.println(jedis.rpoplpush("k2", "k1"));
+        List<String> k11 = jedis.lrange("k1", 0, -1);
+        k11.forEach(System.out::println);
+        System.out.println(jedis.lindex("k1", 2));
+        System.out.println(jedis.lindex("k1", 0));
+        System.out.println(jedis.llen("k1"));
+        System.out.println(jedis.linsert("k1", ListPosition.BEFORE, "v2", "new"));
+        List<String> k111 = jedis.lrange("k1", 0, -1);
+        k111.forEach(System.out::println);
+        System.out.println(jedis.linsert("k1", ListPosition.AFTER, "v2", "new"));
+        List<String> k1111 = jedis.lrange("k1", 0, -1);
+        k1111.forEach(System.out::println);
+        System.out.println(jedis.lrem("k1", 2, "new"));
+        List<String> k11111 = jedis.lrange("k1", 0, -1);
+        k11111.forEach(System.out::println);
+        jedis.lrem("k1", 2, "v3");
+        List<String> k111111 = jedis.lrange("k1", 0, -1);
+        k111111.forEach(System.out::println);
+        jedis.lset("k1", 0, "v1");
+        List<String> k1111111 = jedis.lrange("k1", 0, -1);
+        k1111111.forEach(System.out::println);
         jedis.close();
     }
 
