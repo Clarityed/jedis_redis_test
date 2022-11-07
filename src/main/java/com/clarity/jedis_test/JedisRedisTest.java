@@ -166,4 +166,71 @@ public class JedisRedisTest {
         jedis.close();
     }
 
+    // 测试 Set 集合
+    @Test
+    public void test5() {
+        Jedis jedis = JedisUtil.getLocalRedisJedisObj();
+        System.out.println(jedis.sadd("role", "keQing", "huTao", "niLu"));
+        Set<String> roles = jedis.smembers("role");
+        for (String role : roles) {
+            System.out.println(role);
+        }
+        System.out.println();
+        System.out.println(jedis.sismember("role", "keQing"));
+        System.out.println();
+        System.out.println(jedis.sismember("role", "v1"));
+        System.out.println();
+        System.out.println(jedis.scard("role"));
+        System.out.println();
+        System.out.println(jedis.srem("role", "huTao", "niLu"));
+        System.out.println();
+        Set<String> roles2 = jedis.smembers("role");
+        for (String role : roles2) {
+            System.out.println(role);
+        }
+        System.out.println();
+        System.out.println(jedis.spop("role"));
+        Set<String> roles3 = jedis.smembers("role");
+        for (String role : roles3) {
+            System.out.println(role);
+        }
+        System.out.println();
+        System.out.println(jedis.sadd("role", "keQing", "huTao", "niLu"));
+        System.out.println(jedis.srandmember("role"));
+        System.out.println(jedis.srandmember("role"));
+        System.out.println(jedis.srandmember("role"));
+        System.out.println();
+        System.out.println(jedis.sadd("role2", "ganYu"));
+        System.out.println(jedis.smove("role", "role2", "keQing"));
+        Set<String> roles4 = jedis.smembers("role");
+        for (String role : roles4) {
+            System.out.println(role);
+        }
+        System.out.println();
+        Set<String> sinter = jedis.sinter("role", "role2");
+        for (String s : sinter) {
+            System.out.println(s);
+        }
+        Set<String> sunion = jedis.sunion("role", "role2");
+        for (String s : sunion) {
+            System.out.println(s);
+        }
+        jedis.sadd("role", "keQing");
+        Set<String> sdiff = jedis.sdiff("role", "role2");
+        for (String s : sdiff) {
+            System.out.println(s);
+        }
+        System.out.println();
+        Set<String> roles5 = jedis.smembers("role");
+        for (String role : roles5) {
+            System.out.println(role);
+        }
+        System.out.println();
+        Set<String> roles6 = jedis.smembers("role2");
+        for (String role : roles6) {
+            System.out.println(role);
+        }
+        jedis.close();
+    }
+
 }
