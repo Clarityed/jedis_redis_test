@@ -5,7 +5,9 @@ import org.testng.annotations.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ListPosition;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -229,6 +231,59 @@ public class JedisRedisTest {
         Set<String> roles6 = jedis.smembers("role2");
         for (String role : roles6) {
             System.out.println(role);
+        }
+        jedis.close();
+    }
+
+    // 测试 Hash
+    @Test
+    public void test6() {
+        Jedis jedis = JedisUtil.getLocalRedisJedisObj();
+        jedis.hset("role:1", "name", "keQing");
+        jedis.hset("role:1", "gender", "女");
+        jedis.hset("role:1", "age", "18");
+        System.out.println(jedis.hget("role:1", "name"));
+        System.out.println();
+        Map<String, String> hashMap = new HashMap<>();
+        hashMap.put("name", "niLu");
+        hashMap.put("gender", "女");
+        hashMap.put("age", "18");
+        jedis.hmset("role:2", hashMap);
+        System.out.println(jedis.hexists("role:2", "name"));
+        System.out.println();
+        Set<String> hkeys1 = jedis.hkeys("role:1");
+        for (String hkey : hkeys1) {
+            System.out.println(hkey);
+        }
+        System.out.println();
+        Set<String> hkeys2 = jedis.hkeys("role:2");
+        for (String hkey : hkeys2) {
+            System.out.println(hkey);
+        }
+        System.out.println();
+        List<String> hvals1 = jedis.hvals("role:1");
+        for (String hval : hvals1) {
+            System.out.println(hval);
+        }
+        System.out.println();
+        List<String> hvals2 = jedis.hvals("role:2");
+        for (String hval : hvals2) {
+            System.out.println(hval);
+        }
+        System.out.println();
+        jedis.hincrBy("role:1", "age", 1);
+        System.out.println(jedis.hget("role:1", "age"));
+        System.out.println();
+        jedis.hsetnx("role:1", "weapon", "dangshoujian");
+        System.out.println();
+        Set<String> hkeys3 = jedis.hkeys("role:1");
+        for (String hkey : hkeys3) {
+            System.out.println(hkey);
+        }
+        System.out.println();
+        List<String> hvals3 = jedis.hvals("role:1");
+        for (String hval : hvals3) {
+            System.out.println(hval);
         }
         jedis.close();
     }
