@@ -4,6 +4,7 @@ import com.clarity.utils.JedisUtil;
 import org.testng.annotations.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ListPosition;
+import redis.clients.jedis.Tuple;
 
 import java.util.HashMap;
 import java.util.List;
@@ -285,6 +286,56 @@ public class JedisRedisTest {
         for (String hval : hvals3) {
             System.out.println(hval);
         }
+        jedis.close();
+    }
+
+    // 测试 Zset
+    @Test
+    public void test7() {
+        Jedis jedis = JedisUtil.getLocalRedisJedisObj();
+        // 原神我定义的任务排名
+        Map<String, Double> yuanShenTopMap = new HashMap<>();
+        yuanShenTopMap.put("keQing", 5000d);
+        yuanShenTopMap.put("huTao", 4000d);
+        yuanShenTopMap.put("niLu", 3000d);
+        yuanShenTopMap.put("lingHua", 2000d);
+        yuanShenTopMap.put("ganYu", 1000d);
+        jedis.zadd("yuanShenTop", yuanShenTopMap);
+        Set<String> yuanShenTop1 = jedis.zrange("yuanShenTop", 0, -1);
+        for (String role : yuanShenTop1) {
+            System.out.println(role);
+        }
+        System.out.println();
+        Set<String> yuanShenTop2 = jedis.zrange("yuanShenTop", 0, 2);
+        for (String role : yuanShenTop2) {
+            System.out.println(role);
+        }
+        System.out.println();
+        Set<Tuple> yuanShenTop3 = jedis.zrangeWithScores("yuanShenTop", 0, -1);
+        for (Tuple role : yuanShenTop3) {
+            System.out.println(role);
+        }
+        System.out.println();
+        Set<Tuple> yuanShenTop4 = jedis.zrangeByScoreWithScores("yuanShenTop", 2000, 5000);
+        for (Tuple role : yuanShenTop4) {
+            System.out.println(role);
+        }
+        System.out.println();
+        System.out.println(jedis.zincrby("yuanShenTop", 5000, "keQing"));
+        System.out.println();
+        Set<Tuple> yuanShenTop5 = jedis.zrangeWithScores("yuanShenTop", 0, -1);
+        for (Tuple role : yuanShenTop5) {
+            System.out.println(role);
+        }
+        System.out.println();
+        jedis.zrem("yuanShenTop", "huTao");
+        Set<Tuple> yuanShenTop6 = jedis.zrangeWithScores("yuanShenTop", 0, -1);
+        for (Tuple role : yuanShenTop6) {
+            System.out.println(role);
+        }
+        System.out.println();
+        System.out.println(jedis.zcount("yuanShenTop", 1000, 5000));
+        System.out.println(jedis.zrank("yuanShenTop", "keQing"));
         jedis.close();
     }
 
